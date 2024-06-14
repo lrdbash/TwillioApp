@@ -31,7 +31,7 @@ def send_message():
     # Load the key
     print("Loading encryption key...")
     key = load_key()
-    print(f"Loaded key: {key}")
+
 
     # Encrypt the message
     print("Encrypting message...")
@@ -59,7 +59,7 @@ def decrypt():
         # Load the key
         print("Loading encryption key...")
         key = load_key()
-        print(f"Loaded key: {key}")
+
 
         # Decrypt the message
         print("Decrypting message...")
