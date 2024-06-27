@@ -45,6 +45,7 @@ def decrypt():
         # Decrypt the message using the same encryption key
         decrypted_message = decrypt_message(encryption_key, encrypted_message)
         flash(f'Decrypted message: {decrypted_message}')
+        return render_template('index.html', decrypted_message=decrypted_message)
     except Exception as e:
         flash('Failed to decrypt message. Please check the encrypted text and try again.')
     
