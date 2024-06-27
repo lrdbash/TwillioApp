@@ -38,36 +38,19 @@ def send_message():
 
 @app.route('/decrypt', methods=['POST'])
 def decrypt():
-    encrypted_data = request.form['encrypted_data']
+    encrypted_message = request.form['encrypted_message']
+    key = request.form['decryption_key']
     
     try:
-        # Extract encrypted message and key from the received data
-        encrypted_message, key = parse_encrypted_data(encrypted_data)
-        
-        # Decrypt the message using the extracted key
+        # Decrypt the message using the provided key
         decrypted_message = decrypt_message(key, encrypted_message)
-        
-        # Flash decrypted message for visibility
         flash(f'Decrypted message: {decrypted_message}')
         return render_template('index.html', decrypted_message=decrypted_message)
+
     except Exception as e:
         flash('Failed to decrypt message. Please check the encrypted text and try again.')
     
     return redirect(url_for('index'))
-
-def parse_encrypted_data(encrypted_data):
-    # This function parses the encrypted data to extract message and key
-    parts = encrypted_data.split(';')
-    encrypted_message = None
-    key = None
-    
-    for part in parts:
-        if part.startswith('encry:'):
-            encrypted_message = part.split(':')[1].strip()
-        elif part.startswith('key:'):
-            key = part.split(':')[1].strip()
-    
-    return encrypted_message, key
 
 if __name__ == '__main__':
     app.run(debug=True)
