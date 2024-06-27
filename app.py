@@ -28,7 +28,7 @@ def send_message():
     
     # Send the encrypted message via SMS along with the key
     client.messages.create(
-        body=f"encry: {encrypted_message};key: {key}",
+        body=f"Encrypted Message:\n{encrypted_message}\n\nEncryption Key:\n{key}",
         from_=TWILIO_PHONE_NUMBER,
         to=phone_number
     )
