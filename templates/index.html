@@ -101,10 +101,14 @@
             <button type="submit" class="btn btn-primary">Send Encrypted Message</button>
         </form>
 
-        <form method="POST" action="{{ url_for('decrypt') }}" class="mt-4">
+  <form method="POST" action="{{ url_for('decrypt') }}" class="mt-4">
             <div class="form-group">
                 <label for="encrypted_message">Encrypted Message</label>
                 <textarea class="form-control" id="encrypted_message" name="encrypted_message" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="decryption_key">Decryption Key</label>
+                <input type="text" class="form-control" id="decryption_key" name="decryption_key" required>
             </div>
             <button type="submit" class="btn btn-primary">Decrypt Message</button>
         </form>
