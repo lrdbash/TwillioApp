@@ -108,10 +108,12 @@
             </div>
             <button type="submit" class="btn btn-primary">Decrypt Message</button>
         </form>
-                <div class="mt-4">
-            <label for="decrypted_message">Decrypted Message:</label>
-            <textarea class="form-control" id="decrypted_message" name="decrypted_message" rows="3" readonly></textarea>
-        </div>
+        {% if decrypted_message %}
+            <div class="mt-4">
+                <label for="decrypted_message">Decrypted Message:</label>
+                <textarea class="form-control" id="decrypted_message" name="decrypted_message" rows="3" readonly>{{ decrypted_message }}</textarea>
+            </div>
+        {% endif %}
     </div>
 </body>
 </html>
