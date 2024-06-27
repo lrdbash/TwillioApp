@@ -79,14 +79,14 @@
     </div>
     <div class="container">
         <h1 class="mt-5">Chat Room</h1>
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <div class="alert alert-info mt-4">
-              {% for message in messages %}
-                <p>{{ message }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
         {% endwith %}
 
         <form method="POST" action="{{ url_for('send_message') }}" class="mt-4">
