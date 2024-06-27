@@ -7,7 +7,7 @@ app.secret_key = 'your_secret_key'
 
 # Twilio configuration (replace with your actual Twilio credentials)
 TWILIO_ACCOUNT_SID = 'AC79fb3c180a32f8cae1c2741b8fa15b14'
-TWILIO_AUTH_TOKEN = 'ef6cefa56ab2d6b5947743e8108119ec'
+TWILIO_AUTH_TOKEN = 'd9d280b75f254ce6c1abbcac494f840a'
 TWILIO_PHONE_NUMBER = '+16186176561'
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
