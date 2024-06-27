@@ -40,6 +40,9 @@ def send_message():
 def decrypt():
     encrypted_message = request.form['encrypted_message']
     key = request.form['decryption_key']
+
+    print(f"Received decryption key: {key}")
+    print(f"Received encrypted message: {encrypted_message}")
     
     try:
         # Decrypt the message using the provided key
@@ -49,6 +52,7 @@ def decrypt():
 
     except Exception as e:
         flash('Failed to decrypt message. Please check the encrypted text and try again.')
+        print(f"Decryption error: {str(e)}")
     
     return redirect(url_for('index'))
 
