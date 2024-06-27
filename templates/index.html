@@ -79,31 +79,15 @@
     </div>
     <div class="container">
         <h1 class="mt-5">Chat Room</h1>
-    <!-- Message sent success/failure -->
-    {% if message_sent_success %}
-    <div class="alert alert-success mt-4" role="alert">
-        Message sent successfully!
-    </div>
-    {% endif %}
-
-    {% if message_sent_failure %}
-    <div class="alert alert-danger mt-4" role="alert">
-        Failed to send message. Please try again.
-    </div>
-    {% endif %}
-
-    <!-- Message decrypted success/failure -->
-    {% if decryption_success %}
-    <div class="alert alert-success mt-4" role="alert">
-        Decrypted message: {{ decrypted_message }}
-    </div>
-    {% endif %}
-
-    {% if decryption_failure %}
-    <div class="alert alert-danger mt-4" role="alert">
-        Failed to decrypt message. Please check and try again.
-    </div>
-    {% endif %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
         <form method="POST" action="{{ url_for('send_message') }}" class="mt-4">
             <div class="form-group">
@@ -124,6 +108,11 @@
             </div>
             <button type="submit" class="btn btn-primary">Decrypt Message</button>
         </form>
+
+        <div class="mt-4">
+            <label for="decrypted_message">Decrypted Message:</label>
+            <textarea class="form-control" id="decrypted_message" name="decrypted_message" rows="3" readonly></textarea>
+        </div>
     </div>
 </body>
 </html>
