@@ -6,9 +6,9 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
 # Twilio configuration (replace with your actual Twilio credentials)
-TWILIO_ACCOUNT_SID = 'AC79fb3c180a32f8cae1c2741b8fa15b14'
-TWILIO_AUTH_TOKEN = 'd9d280b75f254ce6c1abbcac494f840a'
-TWILIO_PHONE_NUMBER = '+16186176561'
+TWILIO_ACCOUNT_SID = 'AC4c8f8d846d39633fd21704a1fadcaf18'
+TWILIO_AUTH_TOKEN = 'b6fbd0661e7b58425108043682039514'
+TWILIO_PHONE_NUMBER = '+17622206066'
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 @app.route('/')
