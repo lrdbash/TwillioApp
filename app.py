@@ -28,7 +28,7 @@ def send_message():
     
     # Send the encrypted message via SMS along with the key
     client.messages.create(
-        body=f"Encrypted Message:\n{encrypted_message}\n\nEncryption Key:\n{key}",
+        body=f"Encrypted Message:\n{encrypted_message}\n\nEncryption Key:\n{key.hex()}",
         from_=TWILIO_PHONE_NUMBER,
         to=phone_number
     )
@@ -39,12 +39,13 @@ def send_message():
 @app.route('/decrypt', methods=['POST'])
 def decrypt():
     encrypted_message = request.form['encrypted_message']
-    key = request.form['decryption_key']
+    decryption_key = request.form['decryption_key']
 
-    print(f"Received decryption key: {key}")
+    print(f"Received decryption key: {decryption_key}")
     print(f"Received encrypted message: {encrypted_message}")
     
     try:
+        key = bytes.fromhex(decryption_key)
         # Decrypt the message using the provided key
         decrypted_message = decrypt_message(key, encrypted_message)
         flash(f'Decrypted message: {decrypted_message}')
