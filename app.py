@@ -12,10 +12,6 @@ TWILIO_AUTH_TOKEN = '902247870fbc0dbda9506a3a485462f3'
 TWILIO_PHONE_NUMBER = '+17622206066'
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
-# Generate and store encryption key if it doesn't exist
-if not os.path.exists('aes_key.bin'):
-    generate_key()
-
 @app.route('/')
 def index():
     print("Rendering index.html")
@@ -28,10 +24,16 @@ def send_message():
     print(f"Received phone number: {phone_number}")
     print(f"Received message: {message}")
 
-    # Load the key
-    print("Loading encryption key...")
-    key = load_key()
+    # Delete existing key file if it exists
+    if os.path.exists('aes_key.bin'):
+        print("Deleting existing key file...")
+        os.remove('aes_key.bin')
 
+    # Generate and load a new key
+    print("Generating new encryption key...")
+    generate_key()
+    key = load_key()
+    print(f"Generated and loaded key: {key}")
 
     # Encrypt the message
     print("Encrypting message...")
@@ -59,7 +61,7 @@ def decrypt():
         # Load the key
         print("Loading encryption key...")
         key = load_key()
-
+        print(f"Loaded key: {key}")
 
         # Decrypt the message
         print("Decrypting message...")
