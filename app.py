@@ -1,21 +1,21 @@
 from flask import Flask, request, render_template, redirect, url_for, flash
-from crypto import encrypt_message, decrypt_message
+from crypto import generate_key, load_key, encrypt_message, decrypt_message
 import os
 from twilio.rest import Client
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'your_default_secret_key')
+app.secret_key = os.urandom(24)
 
 # Twilio configuration
-TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
-TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
+TWILIO_ACCOUNT_SID = 'AC4c8f8d846d39633fd21704a1fadcaf18'
+TWILIO_AUTH_TOKEN = 'b54a8c20bbe62945ef1162fd15cf88ff'
+TWILIO_PHONE_NUMBER = '+17622206066'
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
-# Load the encryption key from an environment variable
-key = os.environ.get('ENCRYPTION_KEY')
-if not key:
-    raise ValueError("No encryption key set in environment variables")
+# Generate and store encryption key if it doesn't exist
+if not os.path.exists('aes_key.bin'):
+    generate_key()
+key = load_key()
 
 @app.route('/')
 def index():
@@ -25,7 +25,7 @@ def index():
 def send_message():
     phone_number = request.form['phone_number']
     message = request.form['message']
-
+    
     # Encrypt the message
     encrypted_message = encrypt_message(key, message)
     
