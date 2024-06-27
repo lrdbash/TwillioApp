@@ -6,6 +6,7 @@ from flask_session import Session
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_FILE_DIR'] = '/tmp/flask_session/'
 Session(app)
 
 # Twilio configuration (replace with your actual credentials)
