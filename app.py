@@ -1,80 +1,56 @@
 from flask import Flask, request, render_template, redirect, url_for, flash
-from crypto import generate_key, load_key, encrypt_message, decrypt_message
+from crypto import encrypt_message, decrypt_message
 import os
 from twilio.rest import Client
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'your_default_secret_key')
 
 # Twilio configuration
-TWILIO_ACCOUNT_SID = 'AC4c8f8d846d39633fd21704a1fadcaf18'
-TWILIO_AUTH_TOKEN = '902247870fbc0dbda9506a3a485462f3'
-TWILIO_PHONE_NUMBER = '+17622206066'
+TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
+TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
+# Load the encryption key from an environment variable
+key = os.environ.get('ENCRYPTION_KEY')
+if not key:
+    raise ValueError("No encryption key set in environment variables")
 
 @app.route('/')
 def index():
-    print("Rendering index.html")
     return render_template('index.html')
 
 @app.route('/send', methods=['POST'])
 def send_message():
     phone_number = request.form['phone_number']
     message = request.form['message']
-    print(f"Received phone number: {phone_number}")
-    print(f"Received message: {message}")
-
-    # Delete existing key file if it exists
-    if os.path.exists('aes_key.bin'):
-        print("Deleting existing key file...")
-        os.remove('aes_key.bin')
-
-    # Generate and load a new key
-    print("Generating new encryption key...")
-    generate_key()
-    key = load_key()
-    print(f"Generated and loaded key: {key}")
 
     # Encrypt the message
-    print("Encrypting message...")
     encrypted_message = encrypt_message(key, message)
-    print(f"Encrypted message: {encrypted_message}")
-
+    
     # Send the encrypted message via SMS
-    print("Sending encrypted message via SMS...")
     client.messages.create(
         body=f"encry: {encrypted_message}",
         from_=TWILIO_PHONE_NUMBER,
         to=phone_number
     )
-    print("Message sent successfully!")
-
+    
     flash('Message sent successfully!')
     return redirect(url_for('index'))
 
 @app.route('/decrypt', methods=['POST'])
 def decrypt():
     encrypted_message = request.form['encrypted_message']
-    print(f"Received encrypted message: {encrypted_message}")
-
+    
     try:
-        # Load the key
-        print("Loading encryption key...")
-        key = load_key()
-        print(f"Loaded key: {key}")
-
         # Decrypt the message
-        print("Decrypting message...")
         decrypted_message = decrypt_message(key, encrypted_message)
-        print(f"Decrypted message: {decrypted_message}")
-
         flash(f'Decrypted message: {decrypted_message}')
     except Exception as e:
-        print(f"Error during decryption: {e}")
         flash('Failed to decrypt message. Please check the encrypted text and try again.')
-
+    
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    print("Starting Flask app...")
     app.run(debug=True)
