@@ -79,7 +79,7 @@
     </div>
     <div class="container">
         <h1 class="mt-5">Chat Room</h1>
-        {% with messages = get_flashed_messages(with_categories=true) %}
+{% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
                     <div class="alert alert-{{ category }}">
@@ -108,8 +108,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Decrypt Message</button>
         </form>
-
-        <div class="mt-4">
+                <div class="mt-4">
             <label for="decrypted_message">Decrypted Message:</label>
             <textarea class="form-control" id="decrypted_message" name="decrypted_message" rows="3" readonly></textarea>
         </div>
