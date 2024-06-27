@@ -1,10 +1,13 @@
-from flask import Flask, request, render_template, redirect, url_for, flash
+from flask import Flask, request, render_template, redirect, url_for, flash, session
 from crypto import generate_key, encrypt_message, decrypt_message
 import os
 from twilio.rest import Client
+from flask_session import Session
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
 
 # Twilio configuration
 TWILIO_ACCOUNT_SID = 'AC4c8f8d846d39633fd21704a1fadcaf18'
@@ -21,8 +24,9 @@ def send_message():
     phone_number = request.form['phone_number']
     message = request.form['message']
     
-    # Generate a new AES key
+    # Generate a new AES key and store it in the session
     key = generate_key()
+    session['encryption_key'] = key
     
     # Encrypt the message
     encrypted_message = encrypt_message(key, message)
@@ -42,9 +46,15 @@ def decrypt():
     encrypted_message = request.form['encrypted_message']
     
     try:
-        # Normally we would need the same key used for encryption to decrypt.
-        # As we're generating a new key for each encryption, we cannot decrypt previously sent messages.
-        flash('Decryption is not supported as keys are not stored.')
+        # Retrieve the key from the session
+        key = session.get('encryption_key')
+        if not key:
+            flash('No encryption key found in session. Cannot decrypt message.')
+            return redirect(url_for('index'))
+        
+        # Decrypt the message
+        decrypted_message = decrypt_message(key, encrypted_message)
+        flash(f'Decrypted message: {decrypted_message}')
     except Exception as e:
         flash('Failed to decrypt message. Please check the encrypted text and try again.')
     
